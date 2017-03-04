@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
+
 public class leisure_DB {
 
 	//sql
@@ -146,29 +147,30 @@ public class leisure_DB {
 	}
 	
 	//Remember that columns in the database are zero delimited (start at 0)
-	public void updateBooking(String date, int classid, int areaid,int custid){
-		//System.out.println(date);
+	//Also string date must be in the form of yyyy-mm-dd otherwise CRASHHHHHHHHHH
+	public void updateBooking(String inDate, int classid, int areaid,int custid){
 		connectDB();
 		java.sql.PreparedStatement pState = null;
-		
+		java.sql.Date sqlDate = java.sql.Date.valueOf(inDate);
 		//String sql = "INSERT INTO team4_lesiurecentre.booking (booking_date, class_ID,area_ID, customer_ID) VALUES (booking_date = ?,class_ID = ?,area_ID=?,class_ID = ?);";
 	
-		String sql = "INSERT INTO team4_lesiurecentre.booking (booking_date, class_ID,area_ID, customer_ID) VALUES (?, ?, ?, ?);";
+		String sql = "INSERT INTO leisure.booking (booking_date, class_ID,area_ID, customer_ID) VALUES (?, ?, ?, ?);";
 	
 
 		//team4_lesiurecentre.booking
 		 try {
 				
-			 //System.out.print(d1);
+			 
+			
 		        pState = conn.prepareStatement(sql);
-		        //System.out.println(date);
-		        pState.setString(1, date);
+		       
+		        pState.setDate(1, sqlDate);
 		        pState.setInt(2, classid);
 		        pState.setInt(3, areaid);
 		        pState.setInt(4, custid);
-		      
+		  
 		        pState.execute();
-		        
+		           
 		 }
 		catch(SQLException se){
 			System.out.println(se.getMessage());
@@ -181,7 +183,6 @@ public class leisure_DB {
 		}
 	}
 	
-	//tester for connections
 	public static void main(String[] args) {
 		
 	
@@ -192,8 +193,9 @@ public class leisure_DB {
 		
 		
 		
-		
-		l.updateBooking("today",1,1,1);
+		// date format is unchangeable unfortunately! so
+		// time could/should be linked in the class rather than booking
+		l.updateBooking("2017-03-28",1,1,1);
 		
 		
 		//l.addArea("Blues",20);
