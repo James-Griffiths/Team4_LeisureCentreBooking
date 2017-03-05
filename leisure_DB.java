@@ -11,12 +11,12 @@ public class leisure_DB {
 
 	//sql
 	final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	final String DB_URL = "jdbc:mysql://localhost:3306/?useSSL=false";
+	final String DB_URL = "jdbc:mysql://localhost:3306/leisure?useSSL=false";
 	final String USER_NAME = "root";
 	final String PASSWORD = "password";
 	Connection conn = null;
 	
-	
+	//"jdbc:mysql://localhost:3306/Leisure?useSSL=false";
 	public leisure_DB(){
 
 	}
@@ -183,6 +183,40 @@ public class leisure_DB {
 		}
 	}
 	
+	public int checkCapacity(int classNum){
+		connectDB();
+		java.sql.PreparedStatement pState = null;
+		int classSize = -1;
+		 try {
+				
+			 String sql = "SELECT capacity FROM class WHERE class.class_id = ? ;";
+				//class_ID 
+				//capacity
+			 
+		        pState = conn.prepareStatement(sql);
+		        pState.setInt(1, classNum);
+		        ResultSet rs = pState.executeQuery();
+		        while (rs.next()) {
+		        	 classSize = rs.getInt("capacity");
+		        	
+		        }
+		      return classSize;   
+		 }
+		catch(SQLException se){
+			System.out.println(se.getMessage());
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		finally{
+			disconnectDB();
+		}
+		
+		//if this is the value that gets printed something is wrong
+		// this is for error checking on the java side
+		return -1;
+	}
+	
 	public static void main(String[] args) {
 		
 	
@@ -192,10 +226,9 @@ public class leisure_DB {
 		System.out.println(l.queryAllAreas());
 		
 		
+		System.out.println(l.checkCapacity(6));
 		
-		// date format is unchangeable unfortunately! so
-		// time could/should be linked in the class rather than booking
-		l.updateBooking("2017-03-28",1,1,1);
+		//l.updateBooking("2017-03-28",1,1,1);
 		
 		
 		//l.addArea("Blues",20);
