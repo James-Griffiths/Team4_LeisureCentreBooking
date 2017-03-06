@@ -15,21 +15,23 @@ public class leisure_DB {
 	final String USER_NAME = "root";
 	final String PASSWORD = "password";
 	Connection conn = null;
-	
+
+	// Check what you have titled the database and where/what schema it is on
 	//"jdbc:mysql://localhost:3306/Leisure?useSSL=false";
 	public leisure_DB(){
 
 	}
-	
+
+	// Remember to close in order of Resultset, Prepared Statement, Connection
 	//Connection to the database
 	private void connectDB(){
-		
+
 		try{
 			Class.forName(JDBC_DRIVER);
 			System.out.println("Driver Registered");
-			
-						conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
-						System.out.println("Connected");
+
+			conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
+			System.out.println("Connected");
 		}
 		catch (ClassNotFoundException cnfe){
 			System.out.println("Could not load driver.\n" + cnfe.getMessage());
@@ -37,42 +39,42 @@ public class leisure_DB {
 		catch (SQLException e) {
 			System.out.println("Problem with SQL.\n" + e.getMessage());
 		}
-	
+
 	}
-	
+
 	//closing of connection to database
 	private void disconnectDB(){
 		try{
 			if(conn != null){
-			conn.close();
-		    System.out.println("Connection closed.");
+				conn.close();
+				System.out.println("Connection closed.");
 			}
 		}
 		catch (Exception e){
 			System.out.println("Could not close connection.\n" + e.getMessage());
 		}
 	}
-	
-	
+
+
 	public String queryAllAreas(){
 		connectDB();
 		try{
-		Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-	    System.out.println("Statement object created");
-	    
-	    StringBuilder full = new StringBuilder();
-	    
-	    ResultSet rs = stmt.executeQuery("SELECT * FROM leisure.area");
-	    while(rs.next() != false){
-	    	 // Can get columns by name, or number which starts at 1
-	    	 String id = rs.getString("area_ID");
-	    	 String areaName = rs.getString("area_description");
-	    	 String cap = rs.getString("area_capacity");
-	    	 full.append(id + " " + areaName + " " + cap + '\n');
-	    	}
-	    String end = full.toString();
-	    disconnectDB();
-	    return end;
+			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+			System.out.println("Statement object created");
+
+			StringBuilder full = new StringBuilder();
+
+			ResultSet rs = stmt.executeQuery("SELECT * FROM leisure.area");
+			while(rs.next() != false){
+				// Can get columns by name, or number which starts at 1
+				String id = rs.getString("area_ID");
+				String areaName = rs.getString("area_description");
+				String cap = rs.getString("area_capacity");
+				full.append(id + " " + areaName + " " + cap + '\n');
+			}
+			String end = full.toString();
+			disconnectDB();
+			return end;
 		}
 		catch(SQLException e){
 			System.out.println(e.getMessage());
@@ -80,64 +82,64 @@ public class leisure_DB {
 		disconnectDB();
 		return "NO VALUES";
 	}
-	
+
 	public void addArea(String s,int j){
 		connectDB();
 		try{
 			Statement stmt = conn.createStatement();
-		    System.out.println("Statement object created"); 
-		    
-		    stmt.executeUpdate("USE leisure");
-		    stmt.executeUpdate("INSERT INTO leisure.area (area_description,area_capacity) VALUES(\'" + s +"\',\'" +j +"\')");
-		    
-			}
-			catch(SQLException e){
-				System.out.println(e.getMessage());
-			}
+			System.out.println("Statement object created"); 
+
+			stmt.executeUpdate("USE leisure");
+			stmt.executeUpdate("INSERT INTO leisure.area (area_description,area_capacity) VALUES(\'" + s +"\',\'" +j +"\')");
+			stmt.close();
+		}
+		catch(SQLException e){
+			System.out.println(e.getMessage());
+		}
 		disconnectDB();	
-		
+
 	}
-	
+
 	public void updateArea(String changeName, String currentName){
 		connectDB();
 		try{
 			Statement stmt = conn.createStatement();
-	
+
 			System.out.println("Statement object created"); 
-		    
-		    
-		    
-		    stmt.executeUpdate("USE leisure");
-		    stmt.executeUpdate("UPDATE leisure.area SET area_description = \'" + changeName + "\' WHERE area_ID = \'" + 11 + "\';" );
-		    
-			}
-			catch(SQLException e){
-				System.out.println(e.getMessage());
-			}
+
+
+
+			stmt.executeUpdate("USE leisure");
+			stmt.executeUpdate("UPDATE leisure.area SET area_description = \'" + changeName + "\' WHERE area_ID = \'" + 11 + "\';" );
+
+		}
+		catch(SQLException e){
+			System.out.println(e.getMessage());
+		}
 		disconnectDB();
 	}
-	
-	
+
+
 	//Remember to thank Hugh J! 
 	public String lookAt(int col){
 		connectDB();
 		try{
-		Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-	    System.out.println("Statement object created");
-	    
-	    StringBuilder full = new StringBuilder();
-	    
-	    ResultSet rs = stmt.executeQuery("SELECT * FROM leisure.area WHERE area_ID = '" + col + "';");
-	    if(rs.next()){
-	    	 // Can get columns by name, or number which starts at 1
-	    	 String id = rs.getString("area_ID");
-	    	 String areaName = rs.getString("area_description");
-	    	 String cap = rs.getString("area_capacity");
-	    	 full.append(id + " " + areaName + " " + cap + '\n');
-	    	}
-	    String end = full.toString();
-	    disconnectDB();
-	    return end;
+			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+			System.out.println("Statement object created");
+
+			StringBuilder full = new StringBuilder();
+
+			ResultSet rs = stmt.executeQuery("SELECT * FROM leisure.area WHERE area_ID = '" + col + "';");
+			if(rs.next()){
+				// Can get columns by name, or number which starts at 1
+				String id = rs.getString("area_ID");
+				String areaName = rs.getString("area_description");
+				String cap = rs.getString("area_capacity");
+				full.append(id + " " + areaName + " " + cap + '\n');
+			}
+			String end = full.toString();
+			disconnectDB();
+			return end;
 		}
 		catch(SQLException e){
 			System.out.println(e.getMessage());
@@ -145,7 +147,7 @@ public class leisure_DB {
 		disconnectDB();
 		return "NO VALUES";
 	}
-	
+
 	//Remember that columns in the database are zero delimited (start at 0)
 	//Also string date must be in the form of yyyy-mm-dd otherwise CRASHHHHHHHHHH
 	public void updateBooking(String inDate, int classid, int areaid,int custid){
@@ -153,25 +155,25 @@ public class leisure_DB {
 		java.sql.PreparedStatement pState = null;
 		java.sql.Date sqlDate = java.sql.Date.valueOf(inDate);
 		//String sql = "INSERT INTO team4_lesiurecentre.booking (booking_date, class_ID,area_ID, customer_ID) VALUES (booking_date = ?,class_ID = ?,area_ID=?,class_ID = ?);";
-	
+
 		String sql = "INSERT INTO leisure.booking (booking_date, class_ID,area_ID, customer_ID) VALUES (?, ?, ?, ?);";
-	
+
 
 		//team4_lesiurecentre.booking
-		 try {
-				
-			 
-			
-		        pState = conn.prepareStatement(sql);
-		       
-		        pState.setDate(1, sqlDate);
-		        pState.setInt(2, classid);
-		        pState.setInt(3, areaid);
-		        pState.setInt(4, custid);
-		  
-		        pState.execute();
-		           
-		 }
+		try {
+
+
+
+			pState = conn.prepareStatement(sql);
+
+			pState.setDate(1, sqlDate);
+			pState.setInt(2, classid);
+			pState.setInt(3, areaid);
+			pState.setInt(4, custid);
+
+			pState.execute();
+
+		}
 		catch(SQLException se){
 			System.out.println(se.getMessage());
 		}
@@ -182,26 +184,26 @@ public class leisure_DB {
 			disconnectDB();
 		}
 	}
-	
+
 	public int checkCapacity(int classNum){
 		connectDB();
 		java.sql.PreparedStatement pState = null;
 		int classSize = -1;
-		 try {
-				
-			 String sql = "SELECT capacity FROM class WHERE class.class_id = ? ;";
-				//class_ID 
-				//capacity
-			 
-		        pState = conn.prepareStatement(sql);
-		        pState.setInt(1, classNum);
-		        ResultSet rs = pState.executeQuery();
-		        while (rs.next()) {
-		        	 classSize = rs.getInt("capacity");
-		        	
-		        }
-		      return classSize;   
-		 }
+		try {
+
+			String sql = "SELECT capacity FROM class WHERE class.class_id = ? ;";
+			//class_ID 
+			//capacity
+
+			pState = conn.prepareStatement(sql);
+			pState.setInt(1, classNum);
+			ResultSet rs = pState.executeQuery();
+			while (rs.next()) {
+				classSize = rs.getInt("capacity");
+
+			}
+			return classSize;   
+		}
 		catch(SQLException se){
 			System.out.println(se.getMessage());
 		}
@@ -211,37 +213,93 @@ public class leisure_DB {
 		finally{
 			disconnectDB();
 		}
-		
+
 		//if this is the value that gets printed something is wrong
 		// this is for error checking on the java side
 		return -1;
 	}
-	
+
+	// Tells us if the class is fully booked
+	// by adding the total number of bookings for the class
+	// and comparing them to the class' capacity
+	// needs another method to prevent adding bookings to fully
+	// booked classes
+	public boolean isFull(int classType){
+		connectDB();
+		java.sql.PreparedStatement pState = null;
+		java.sql.PreparedStatement pState2 = null;
+
+		int counter = classType;
+
+		try {
+			String sql = "SELECT capacity FROM class WHERE class.class_id = ? ;";
+			String sql2 = "SELECT COUNT(booking.class_ID) AS totalB FROM booking WHERE booking.class_id = ? ;";
+
+			pState = conn.prepareStatement(sql);
+			pState.setInt(1, classType);
+			ResultSet rs = pState.executeQuery();
+			while (rs.next()) {
+				classType = rs.getInt("capacity");
+			}
+			pState2 = conn.prepareStatement(sql2);
+			pState2.setInt(1,counter);
+			ResultSet rs2 = pState2.executeQuery();
+			while (rs2.next()) {
+				counter = rs2.getInt("totalB");
+
+			}
+			rs.close();
+			rs2.close();
+			pState.close();
+			pState2.close();
+
+		}
+		catch(SQLException se){
+			System.out.println(se.getMessage());
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		finally{
+			disconnectDB();
+		}
+		if(classType == counter){
+
+			return true;
+		}
+		else{
+			return false;
+		}
+
+	}
+
 	public static void main(String[] args) {
-		
-	
-		
+
+
+
 		leisure_DB l = new leisure_DB();
-		
+
 		System.out.println(l.queryAllAreas());
-		
-		
+
+
 		System.out.println(l.checkCapacity(6));
-		
+
+		System.out.println("\n" + l.isFull(1));
+
 		//l.updateBooking("2017-03-28",1,1,1);
-		
-		
+
+
 		//l.addArea("Blues",20);
-		
+
 		//System.out.println(l.queryAllAreas());
-		
-		
+
+
 		//System.out.println(l.lookAt(2));
-		
-		
+
+
 		//l.updateArea("HELELELELE", "Blues");
-		
+
 		//System.out.println(l.queryAllAreas());
-		
+
 	}
 }
