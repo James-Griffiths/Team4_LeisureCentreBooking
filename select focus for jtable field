@@ -1,0 +1,2 @@
+table.getSelectionModel().getLeadSelectionIndex();
+table.getColumnModel().getSelectionModel().getLeadSelectionIndex();
