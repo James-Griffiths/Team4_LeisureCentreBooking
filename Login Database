@@ -1,0 +1,54 @@
+package database;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class StaffDbHandler {
+	private Statement statement = null;
+	private ResultSet resultSet = null;
+	private String host = "jdbc:mysql://localhost/leisure";
+	private String username = "root";
+	private String password = "password";
+	private PreparedStatement preparedStmt;
+	
+	public boolean loginCheck(String username1, String password1) {
+		boolean validCredentials = false;
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection conn = (Connection) DriverManager.getConnection(host,
+					username, password);
+			statement = conn.createStatement();
+
+			String query = "SELECT staff_name, password FROM staff" +
+                " INNER JOIN password on password.staff_ID = staff.staff_ID;";
+			ResultSet rs = statement.executeQuery(query);
+
+			// finds the last used id
+			while (rs.next()) {
+				String name = rs.getString("staff_name");
+				String passwd = rs.getString("password");
+
+				if (name.equals(username1) && passwd.equals(password1)) {
+					validCredentials = true;
+					break;
+				}
+			}
+
+			conn.close();
+
+		} catch (SQLException ex) {
+			while (ex != null) {
+				System.out.println("SQL Exception:  " + ex.getMessage());
+				ex = ex.getNextException();
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return validCredentials;
+	}
