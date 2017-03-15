@@ -1,0 +1,5 @@
+
+1
+2
+// if color was set prior ... pls see notes below
+ setForeground(table.getForeground());
