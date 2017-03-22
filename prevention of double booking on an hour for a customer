@@ -1,0 +1,17 @@
+//prevention of double booking
+
+
+
+select caldate, roomID, bookingid from booking 
+ where rstatus = 1 and caldate between '2010-08-01' and '2010-08-05'
+  group by caldate, roomID, bookingid order by caldate, roomID;
+-- where '2010-08-01' and '2010-08-05' are examples for startdate and enddate which
+-- should be replaced by variables depending on your programming environment.
+
+
+
+select datetime, customerName, customerPhoneNum from customerDetails 
+ where rstatus = 1 and datetime between 'hrs-min-secs'('00-00-00') and 'hrs-mins-secs'('23-59-59')
+  group by datetime, customerName, customerPhoneNum order by datetime, customereName;
+-- where '2010-08-01' and '2010-08-05' are examples for startdate and enddate which
+-- should be replaced by variables depending on your programming environment.
