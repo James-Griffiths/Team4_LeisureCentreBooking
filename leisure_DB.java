@@ -416,14 +416,47 @@ public class leisure_DB {
 		return false;
 	}
 	
-	public void addMember(int typeMembership, String fName, String lName, String dateOfBirth, String address, String phone, double balance){
+	public int getMembershipType(String valIn){
 		connectDB();
 		java.sql.PreparedStatement pState = null;
 		
+		int mID = -1;
+		try{
+			String sql = "SELECT membership_ID FROM membership WHERE type = ? ;";
+			
+			pState = conn.prepareStatement(sql);
+			pState.setString(1, valIn);
+			ResultSet rs = pState.executeQuery();
+			
+			
+			while(rs.next() != false){
+			
+				mID = rs.getInt("membership_ID");
+				
+			}
+			
+			
+		}
+		catch(SQLException se){
+			System.out.println(se.getMessage());
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		finally{
+			disconnectDB();
+		}
+		return mID;
+	}
+	
+	public void addMember(int typeMembership, String fName, String lName, String dateOfBirth, String address, String phone, double balance){
+		connectDB();
+		java.sql.PreparedStatement pState = null;
 		try {
 			String sql = "INSERT INTO member (membership_ID, member_forename, member_surname, member_address, member_phone, member_balance, member_DOB) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 			//dates are yyyy-mm-dd
+				
 			
 			pState = conn.prepareStatement(sql);
 			pState.setInt(1, typeMembership);
@@ -723,6 +756,7 @@ public class leisure_DB {
 
 		leisure_DB l = new leisure_DB();
 
+		System.out.println(l.getMembershipType("Gym Only Adult"));
 		System.out.println(l.getClasses());
 		
 		System.out.println(l.today());
