@@ -499,17 +499,17 @@ public class leisureCentreProject extends javax.swing.JFrame {
 
 		jButton2.setText("Create Member");
 		jButton2.addActionListener(new java.awt.event.ActionListener() {
+			
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				
-				StringBuilder fNameWTi = null;
+				StringBuilder fNameWTi = new StringBuilder();
 				String titled,tm, fn, ln, ad, ph, dBirth;
 				Double bal = 0.0;
-				int memType;
-				
+				int memType = lDB.getMembershipType((String) jComboBox7.getSelectedItem());
 				
 				dBirth = addMemDOB.getText();	
-				tm = addMemTitle.getText();
+				tm = addMemTitle.getText() + " ";
 				fn = addMemFiNa.getText();
 				
 				fNameWTi.append(tm);
@@ -517,18 +517,27 @@ public class leisureCentreProject extends javax.swing.JFrame {
 				
 				titled = fNameWTi.toString();
 				
-				
 				ln = addMemLaNa.getText();
 				ad = addMemAd.getText();
 				
 				ph = addMemPhone.getText();
 				
-				memType = jComboBox7.
 				
-				lDB.addMember(typeMembership, titled, ln, dBirth, ad, ph, bal);
-				
+				lDB.addMember(memType, titled, ln, dBirth, ad, ph, bal);
 				
 				
+				
+				
+				UIManager.put("OptionPane.messageFont", new Font("TimesNewRoman",Font.BOLD,20));
+				UIManager.put("OptionPane.buttonFont", new Font("SansSerif",Font.BOLD,20));
+				JOptionPane.showMessageDialog(null,"New Member created.","Success",JOptionPane.INFORMATION_MESSAGE);
+				
+				addMemDOB.setText(null);
+				addMemTitle.setText(null);
+				addMemFiNa.setText(null);
+				addMemLaNa.setText(null);
+				addMemAd.setText(null);
+				addMemPhone.setText(null);
 				
 				jButton2ActionPerformed(evt);
 			}
